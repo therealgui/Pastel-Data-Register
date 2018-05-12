@@ -69,6 +69,11 @@ public class MainWindowView extends Application{
 		Button btnRegist = new Button("Registar");
 		
 		/**set action of controls**/
+		menuItemConsultarTodos.setOnAction(e -> {
+			Stage newStage = new Stage();
+			new RegestryView().initUI(stage,newStage);
+			stage.hide();
+		});
 		
 		/**add controls to layout manager**/
 		VBox labelTextFieldReceitaDiariaBox = new VBox(10);
