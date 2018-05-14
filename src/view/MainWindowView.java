@@ -71,7 +71,7 @@ public class MainWindowView extends Application{
 		/**set action of controls**/
 		menuItemConsultarTodos.setOnAction(e -> {
 			Stage newStage = new Stage();
-			new RegestryView().initUI(stage,newStage);
+			new RegestryView().initUI(stage,newStage,false);
 			stage.hide();
 		});
 		

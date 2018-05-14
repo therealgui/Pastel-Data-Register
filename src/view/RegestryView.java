@@ -1,10 +1,14 @@
 package view;
 
+import java.time.LocalDate;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -15,7 +19,7 @@ import javafx.stage.Stage;
 
 public class RegestryView {
 	
-	public void initUI(Stage previousStage, Stage stage) {
+	public void initUI(Stage previousStage, Stage stage, boolean searchFunctionStatus) {
 		StackPane root = new StackPane();
 		GridPane gridPaneNode = new GridPane();
 		gridPaneNode.setAlignment(Pos.TOP_CENTER);
@@ -36,6 +40,19 @@ public class RegestryView {
 		table.getColumns().addAll(tbColReceitaDiaria,
 				tbColDepesaFatura,tbColDespesa,tbColIVA,tbColData);
 		
+		Label lbData = null;
+		final DatePicker datePicker = new DatePicker();
+		
+		if(searchFunctionStatus) {
+			lbData = new Label("Data:");
+		}
+		
+		/**set action of controls**/
+		stage.setOnCloseRequest(e -> {
+			previousStage.show();
+			stage.close();
+		});
+		
 		table.widthProperty().addListener(new ChangeListener<Number>()
 	    {
 	        public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
@@ -48,18 +65,26 @@ public class RegestryView {
 	        }
 	    });
 		
-		/**set action of controls**/
-		stage.setOnCloseRequest(e -> {
-			previousStage.show();
-			stage.close();
-		});
+		if(searchFunctionStatus) {
+			datePicker.setOnAction(e ->{
+				LocalDate date = datePicker.getValue();
+				System.out.println(date);
+				
+			});
+		}
 		
 		/**add controls to layout managers**/
-		HBox boxPesquisa = new HBox();
-		boxPesquisa.getChildren().addAll();
-		//TODO: create box with search options
+		HBox boxPesquisa = null;
+		if(searchFunctionStatus) {
+			boxPesquisa = new HBox();
+			boxPesquisa.getChildren().addAll();
+		}
 		
-		gridPaneNode.add(table, 0, 0);
+		//gridPaneNode.add(table, 0, 0);
+		if(searchFunctionStatus) {
+			root.getChildren().add(boxPesquisa);
+		}
+		
 		root.getChildren().add(table);
 		
 		Scene scene = new Scene(root, 950, 600);
