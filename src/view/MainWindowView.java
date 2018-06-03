@@ -56,10 +56,14 @@ public class MainWindowView extends Application{
 		menuBar.getMenus().add(menuExportar);
 		menuBar.getMenus().add(menuAcerca);
 		
-		Label lbReceitaDiaria = new Label("Receita Di√°ria");
+		Label lbReceitaDiaria = new Label("Receita Di·ria");
 		Label lbDespesaFatura = new Label("Despesa/Fatura");
 		Label lbDespesa = new Label("Despesa");
 		Label lbIVA = new Label("IVA");
+		Label lbTotalReceitaDiaria = new Label("Total:-");
+		Label lbTotalDespesaFatura = new Label("Total:-");
+		Label lbTotalDespesa = new Label("Total:-");
+		Label lbTotalIVA = new Label("Total:-");
 		
 		TextField txtfReceitaDiaria = new TextField();
 		TextField txtfDespesaFatura = new TextField();
@@ -79,22 +83,22 @@ public class MainWindowView extends Application{
 		VBox labelTextFieldReceitaDiariaBox = new VBox(10);
 		labelTextFieldReceitaDiariaBox.setAlignment(Pos.CENTER);
 		labelTextFieldReceitaDiariaBox.setPadding(new Insets(5));
-		labelTextFieldReceitaDiariaBox.getChildren().addAll(lbReceitaDiaria, txtfReceitaDiaria);
+		labelTextFieldReceitaDiariaBox.getChildren().addAll(lbReceitaDiaria, txtfReceitaDiaria, lbTotalReceitaDiaria);
 		
 		VBox labelTextFieldDespesaFaturaBox = new VBox(10);
 		labelTextFieldDespesaFaturaBox.setAlignment(Pos.CENTER);
 		labelTextFieldDespesaFaturaBox.setPadding(new Insets(5));
-		labelTextFieldDespesaFaturaBox.getChildren().addAll(lbDespesaFatura, txtfDespesaFatura);
+		labelTextFieldDespesaFaturaBox.getChildren().addAll(lbDespesaFatura, txtfDespesaFatura, lbTotalDespesaFatura);
 		
 		VBox labelTextFieldDespesaBox = new VBox(10);
 		labelTextFieldDespesaBox.setAlignment(Pos.CENTER);
 		labelTextFieldDespesaBox.setPadding(new Insets(5));
-		labelTextFieldDespesaBox.getChildren().addAll(lbDespesa, txtfDespesa);
+		labelTextFieldDespesaBox.getChildren().addAll(lbDespesa, txtfDespesa, lbTotalDespesa);
 		
 		VBox labelTextFieldIVABox = new VBox(10);
 		labelTextFieldIVABox.setAlignment(Pos.CENTER);
 		labelTextFieldIVABox.setPadding(new Insets(5));
-		labelTextFieldIVABox.getChildren().addAll(lbIVA, txtfIVA);
+		labelTextFieldIVABox.getChildren().addAll(lbIVA, txtfIVA, lbTotalIVA);
 
 		HBox inputBox = new HBox(10);
 		inputBox.setAlignment(Pos.CENTER);
@@ -112,9 +116,9 @@ public class MainWindowView extends Application{
 		root.setTop(menuBar);
 		root.setCenter(gridPaneNode);
 		
-		Scene scene = new Scene(root, 540, 170);
+		Scene scene = new Scene(root, 540, 190);
 		
-		stage.setTitle("Pastel Registo Di√°rio");
+		stage.setTitle("Pastel Registo Di·rio");
 		stage.setScene(scene);
 		stage.show();
 		

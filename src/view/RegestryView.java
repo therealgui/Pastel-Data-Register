@@ -4,14 +4,12 @@ import java.time.LocalDate;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -31,7 +29,7 @@ public class RegestryView {
 		/**create controls**/
 		TableView<String> table = new TableView<>();
 		
-		TableColumn<String, String> tbColReceitaDiaria = new TableColumn<>("Receita Di√°ria");
+		TableColumn<String, String> tbColReceitaDiaria = new TableColumn<>("Receita Di·ria");
 		TableColumn<String, String> tbColDepesaFatura = new TableColumn<>("Despesa/Fatura");
 		TableColumn<String, String> tbColDespesa = new TableColumn<>("Despesa");
 		TableColumn<String, String> tbColIVA = new TableColumn<>("IVA");
