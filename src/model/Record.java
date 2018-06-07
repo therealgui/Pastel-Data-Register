@@ -1,13 +1,14 @@
 package model;
 
-public class Registo {
+public class Record {
 
 	private double receitaDiariaValor;
 	private double despesaFaturaValor;
 	private double despesaValor;
 	private double IVAValor;
+	private Date date;
 	
-	public Registo(double receitaDiariaValor, double despesaFaturaValor, double despesaValor, double IVAValor) {
+	public Record(double receitaDiariaValor, double despesaFaturaValor, double despesaValor, double IVAValor) {
 		this.setReceitaDiariaValor(receitaDiariaValor);
 		this.setDespesaFaturaValor(despesaFaturaValor);
 		this.setDespesaValor(despesaValor);
