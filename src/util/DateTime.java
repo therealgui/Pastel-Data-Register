@@ -84,7 +84,13 @@ public final class DateTime {
 		return cal;
 	}
 	
-	
+	/**
+	 * parses a string that contains a date in a certain format
+	 * 
+	 * @param aDateString
+	 * @param format
+	 * @return a Date object or null if there was an error parsing the string
+	 */
 	public static Calendar parseDate(final String aDateString, final String format) {
 		try {
 			final SimpleDateFormat df = new SimpleDateFormat(format);
@@ -97,4 +103,38 @@ public final class DateTime {
 		return null;
 	}
 	
+	/**
+	 * format a given date to the specific date format YYYY/MM/dd
+	 * 
+	 * @param aDate Calendar instance
+	 * @return String containing the date formatted
+	 */
+	public static String format(final Calendar aDate) {
+		return format(aDate, "YYYY/MM/dd");
+	}
+	
+	/**
+	 * format a given date to a specific date format
+	 * 
+	 * @param aDate Calendar instance
+	 * @param dateFormat
+	 * @return String containing the date formatted
+	 */
+	public static String format(final Calendar aDate, String dateFormat) {
+		final SimpleDateFormat formater = new SimpleDateFormat(dateFormat);
+		return formater.format(aDate.getTime());
+	}
+	
+	/**
+	 * compare if two dates are the same
+	 * 
+	 * @param dateA
+	 * @param dateB
+	 * @return boolean
+	 */
+	public static boolean compareDates(Calendar dateA, Calendar dateB) {
+		return (dateA.get(Calendar.DAY_OF_MONTH) == dateB.get(Calendar.DAY_OF_MONTH)
+				&& dateA.get(Calendar.MONTH) == dateB.get(Calendar.MONTH)
+				&& dateA.get(Calendar.YEAR) == dateB.get(Calendar.YEAR));
+	}
 }
