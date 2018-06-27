@@ -87,7 +87,7 @@ public class Record implements Comparable<Record>{
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		
@@ -117,5 +117,13 @@ public class Record implements Comparable<Record>{
 		}
 		
 		return 0;
+	}
+
+	@Override
+	public String toString(){
+		return String.valueOf(receitaDiariaValor) + ";" +
+				String.valueOf(despesaFaturaValor) + ";" +
+				String.valueOf(despesaValor) + ";" +
+				String.valueOf(IVAValor);
 	}
 }

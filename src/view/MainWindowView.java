@@ -1,25 +1,28 @@
 package view;
 
+import controller.RecordController;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Record;
+import presistence.DataPresistence;
+
+import java.time.LocalDate;
 
 public class MainWindowView extends Application{
 
 	public static void main(String[] args) {
+		DataPresistence<Record> dt = new DataPresistence<>();
+		dt.createMainDirectory();
+		dt.createBackupDirectory();
 		launch(args);
 	}
 	
@@ -77,6 +80,31 @@ public class MainWindowView extends Application{
 			Stage newStage = new Stage();
 			new RegestryView().initUI(stage,newStage,false);
 			stage.hide();
+		});
+
+		btnRegist.setOnAction(e -> {
+			RecordController controller = new RecordController();
+			double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
+			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
+			double despesa = Double.parseDouble(txtfDespesa.getText());
+			double IVA = Double.parseDouble(txtfIVA.getText());
+			boolean result = controller.createNewRecord(receitaDiaria, despesaFatura, despesa, IVA, false);
+			Alert alert = null;
+
+			if(result){
+				alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle("Confirmação");
+				alert.setHeaderText("Registo feito com sucesso");
+				alert.setContentText(null);
+			}
+			else{
+				alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Erro");
+				alert.setHeaderText("Erro ao efetura o registo de dados");
+				alert.setContentText(null);
+			}
+
+			alert.show();
 		});
 		
 		/**add controls to layout manager**/

@@ -1,14 +1,17 @@
 package controller;
 
 import model.Record;
-import util.DateTime;
+import presistence.DataPresistence;
+
+import java.time.LocalDate;
 
 public class RecordController {
 	
 	private Record newRegisto;
+	private DataPresistence<Record> dataPresistenceObj;
 	
 	public RecordController() {
-		
+		dataPresistenceObj = new DataPresistence<>();
 	}
 	
 	/**
@@ -62,8 +65,8 @@ public class RecordController {
 	 */
 	private boolean createNewRegisto(double receitaDiaria, double despesaFatura, double despesa, double IVA) {
 		try {
-			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, DateTime.now());
-			return true;
+			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
+			return dataPresistenceObj.writeDataToFile(this.newRegisto);
 		}catch(Exception e) {
 			return false;
 		}
