@@ -11,8 +11,6 @@ import java.util.GregorianCalendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import util.DateTime;
-
 class RecordTest {
 
 	private Record record1;

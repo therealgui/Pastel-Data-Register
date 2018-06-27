@@ -1,8 +1,6 @@
 package model;
 
-import java.util.Calendar;
-
-import util.DateTime;
+import java.time.*;
 
 public class Record implements Comparable<Record>{
 
@@ -10,9 +8,9 @@ public class Record implements Comparable<Record>{
 	private double despesaFaturaValor;
 	private double despesaValor;
 	private double IVAValor;
-	private Calendar date;
+	private LocalDate date;
 	
-	public Record(double receitaDiariaValor, double despesaFaturaValor, double despesaValor, double IVAValor, Calendar date) {
+	public Record(double receitaDiariaValor, double despesaFaturaValor, double despesaValor, double IVAValor, LocalDate date) {
 		this.setReceitaDiariaValor(receitaDiariaValor);
 		this.setDespesaFaturaValor(despesaFaturaValor);
 		this.setDespesaValor(despesaValor);
@@ -70,7 +68,7 @@ public class Record implements Comparable<Record>{
 	}
 
 	/**
-	 * @param iVAValor the iVAValor to set
+	 * @param IVAValor the iVAValor to set
 	 */
 	public void setIVAValor(double IVAValor) {
 		this.IVAValor = IVAValor;
@@ -79,14 +77,14 @@ public class Record implements Comparable<Record>{
 	/**
 	 * @return the date 
 	 */
-	public Calendar getDate() {
+	public LocalDate getDate() {
 		return this.date;
 	}
 	
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(Calendar date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	
@@ -105,16 +103,16 @@ public class Record implements Comparable<Record>{
 			return false;
 		}
 		
-		return DateTime.compareDates(this.date, ((Record)o).getDate());
+		return this.date.isEqual(((Record) o).getDate());
 	}
 
 	@Override
 	public int compareTo(Record o) {
-		if(this.date.after(o.getDate())) {
+		if(this.date.isAfter(o.getDate())) {
 			return 1;
 		}
 		
-		if(this.date.before(o.getDate())) {
+		if(this.date.isBefore(o.getDate())) {
 			return -1;
 		}
 		
