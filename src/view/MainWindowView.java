@@ -1,5 +1,6 @@
 package view;
 
+import controller.DataPresistenceController;
 import controller.RecordController;
 import javafx.application.Application;
 import javafx.geometry.HPos;
@@ -14,15 +15,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Record;
 import presistence.DataPresistence;
+import util.Setting;
 
 import java.time.LocalDate;
 
 public class MainWindowView extends Application{
 
 	public static void main(String[] args) {
-		DataPresistence<Record> dt = new DataPresistence<>();
-		dt.createMainDirectory();
-		dt.createBackupDirectory();
+		Setting.setPresistenceData();
+		Setting.createMainDirectory();
+		Setting.createBackupDirectory();
+		Setting.createRecordFile();
 		launch(args);
 	}
 	

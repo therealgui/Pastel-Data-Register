@@ -121,7 +121,7 @@ public class Record implements Comparable<Record>{
 
 	@Override
 	public String toString(){
-		return String.valueOf(receitaDiariaValor) + ";" +
+		return this.date.toString() + ";" + String.valueOf(receitaDiariaValor) + ";" +
 				String.valueOf(despesaFaturaValor) + ";" +
 				String.valueOf(despesaValor) + ";" +
 				String.valueOf(IVAValor);

@@ -1,17 +1,16 @@
 package controller;
 
 import model.Record;
-import presistence.DataPresistence;
 
 import java.time.LocalDate;
 
 public class RecordController {
 	
 	private Record newRegisto;
-	private DataPresistence<Record> dataPresistenceObj;
+	private DataPresistenceController dataPresistenceController;
 	
 	public RecordController() {
-		dataPresistenceObj = new DataPresistence<>();
+		dataPresistenceController = new DataPresistenceController();
 	}
 	
 	/**
@@ -43,6 +42,11 @@ public class RecordController {
 	 * @return
 	 */
 	private boolean editRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA) {
+
+		if(!this.newRegisto.getDate().isEqual(LocalDate.now())){
+			return false;
+		}
+
 		try {
 			this.newRegisto.setReceitaDiariaValor(receitaDiaria);
 			this.newRegisto.setDespesaFaturaValor(despesaFatura);
@@ -66,7 +70,7 @@ public class RecordController {
 	private boolean createNewRegisto(double receitaDiaria, double despesaFatura, double despesa, double IVA) {
 		try {
 			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
-			return dataPresistenceObj.writeDataToFile(this.newRegisto);
+			return dataPresistenceController.writeRecordInfoToFile(this.newRegisto);
 		}catch(Exception e) {
 			return false;
 		}
