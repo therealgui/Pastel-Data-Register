@@ -2,6 +2,7 @@ package presistence;
 
 import model.Record;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -11,11 +12,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class DataPresistence<T> {
 	
-	public boolean readDataFromFile() {
-		return true;
+	public List<String> readDataFromFile(String pathStr, String fileName) {
+		List<String> list = new ArrayList<>();
+		Path path = Paths.get(pathStr+"\\"+fileName);
+		String line = "";
+
+		try(BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"))){
+
+			list = reader.lines().collect(Collectors.toList());
+
+		}catch(IOException e){
+			e.printStackTrace();
+			return null;
+		}
+
+		return list;
 	}
 
 	/**

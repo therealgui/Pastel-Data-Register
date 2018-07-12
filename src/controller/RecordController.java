@@ -1,16 +1,20 @@
 package controller;
 
 import model.Record;
-
+import model.Subject;
+import model.Observer;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RecordController {
+public class RecordController{
 	
 	private Record newRegisto;
 	private DataPresistenceController dataPresistenceController;
 	
 	public RecordController() {
 		dataPresistenceController = new DataPresistenceController();
+
 	}
 	
 	/**
@@ -20,31 +24,32 @@ public class RecordController {
 	 * @param despesaFatura
 	 * @param despesa
 	 * @param IVA
-	 * @param toReInsert
-	 * @return boolean
+	 * @return instance of Record or null
 	 */
-	public boolean createNewRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, boolean toReInsert) {
-		if(toReInsert) {
-			return this.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
-		}
-		else {
-			return this.createNewRegisto(receitaDiaria, despesaFatura, despesa, IVA);
+	public Record createNewRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
+		try {
+			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, date);
+			boolean result = dataPresistenceController.writeRecordInfoToFile(this.newRegisto);
+
+			return result == true ? this.newRegisto : null;
+		}catch(Exception e) {
+			return null;
 		}
 	}
 	
 	/**
-	 * 
+	 * edit the current record
+	 *
 	 * @param receitaDiaria
-	 * 
 	 * @param despesaFatura
 	 * @param despesa
 	 * @param IVA
-	 * @return
+	 * @return instance of Record or null
 	 */
-	private boolean editRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA) {
+	public Record editRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
 
-		if(!this.newRegisto.getDate().isEqual(LocalDate.now())){
-			return false;
+		if(!this.newRegisto.getDate().isEqual(date)){
+			return null;
 		}
 
 		try {
@@ -52,27 +57,9 @@ public class RecordController {
 			this.newRegisto.setDespesaFaturaValor(despesaFatura);
 			this.newRegisto.setDespesaValor(despesa);
 			this.newRegisto.setIVAValor(IVA);
-			return true;
+			return this.newRegisto;
 		} catch(Exception e) {
-			return false;
-		}
-	}
-	
-	/**
-	 * create a new Record object
-	 * 
-	 * @param receitaDiaria
-	 * @param despesaFatura
-	 * @param despesa
-	 * @param IVA
-	 * @return
-	 */
-	private boolean createNewRegisto(double receitaDiaria, double despesaFatura, double despesa, double IVA) {
-		try {
-			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
-			return dataPresistenceController.writeRecordInfoToFile(this.newRegisto);
-		}catch(Exception e) {
-			return false;
+			return null;
 		}
 	}
 }

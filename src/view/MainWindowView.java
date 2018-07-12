@@ -1,6 +1,6 @@
 package view;
 
-import controller.DataPresistenceController;
+import controller.MonthlyRecordController;
 import controller.RecordController;
 import javafx.application.Application;
 import javafx.geometry.HPos;
@@ -13,13 +13,27 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.Record;
-import presistence.DataPresistence;
+import model.MonthlyRecord;
+import model.Observer;
 import util.Setting;
 
-import java.time.LocalDate;
+public class MainWindowView extends Application implements Observer {
 
-public class MainWindowView extends Application{
+	BorderPane root;
+	GridPane gridPaneNode;
+	MenuBar menuBar;
+	Menu menuConsultarRegistos;
+	Menu menuExportar;
+	Menu menuAcerca;
+	Label lbReceitaDiaria;
+	Label lbDespesaFatura;
+	Label lbDespesa;
+	Label lbIVA;
+	Label lbTotalReceitaDiaria;
+	Label lbTotalDespesaFatura;
+	Label lbTotalDespesa;
+	Label lbTotalIVA;
+	MonthlyRecordController monthlyRecordController;
 
 	public static void main(String[] args) {
 		Setting.setPresistenceData();
@@ -36,8 +50,10 @@ public class MainWindowView extends Application{
 	}
 	
 	private void initUI(Stage stage) {
-		BorderPane root = new BorderPane();
-		GridPane gridPaneNode = new GridPane();
+		monthlyRecordController = new MonthlyRecordController();
+
+		root = new BorderPane();
+		gridPaneNode = new GridPane();
 		gridPaneNode.setAlignment(Pos.TOP_CENTER);
 		//root.setGridLinesVisible(true);
 		gridPaneNode.setHgap(8);
@@ -45,10 +61,10 @@ public class MainWindowView extends Application{
 		gridPaneNode.setPadding(new Insets(5));
 		
 		/**create controls**/
-		MenuBar menuBar = new MenuBar();
-		Menu menuConsultarRegistos = new Menu("Consultar Registos");
-		Menu menuExportar = new Menu("Exportar");
-		Menu menuAcerca = new Menu("Acerca");
+		menuBar = new MenuBar();
+		menuConsultarRegistos = new Menu("Consultar Registos");
+		menuExportar = new Menu("Exportar");
+		menuAcerca = new Menu("Acerca");
 		
 		MenuItem menuItemExportarPDF = new MenuItem("PDF");
 		MenuItem menuItemConsultarTodos = new MenuItem("Todos registos");
@@ -62,14 +78,14 @@ public class MainWindowView extends Application{
 		menuBar.getMenus().add(menuExportar);
 		menuBar.getMenus().add(menuAcerca);
 		
-		Label lbReceitaDiaria = new Label("Receita Diária");
-		Label lbDespesaFatura = new Label("Despesa/Fatura");
-		Label lbDespesa = new Label("Despesa");
-		Label lbIVA = new Label("IVA");
-		Label lbTotalReceitaDiaria = new Label("Total:-");
-		Label lbTotalDespesaFatura = new Label("Total:-");
-		Label lbTotalDespesa = new Label("Total:-");
-		Label lbTotalIVA = new Label("Total:-");
+		lbReceitaDiaria = new Label("Receita Diária");
+		lbDespesaFatura = new Label("Despesa/Fatura");
+		lbDespesa = new Label("Despesa");
+		lbIVA = new Label("IVA");
+		lbTotalReceitaDiaria = new Label("Total:-");
+		lbTotalDespesaFatura = new Label("Total:-");
+		lbTotalDespesa = new Label("Total:-");
+		lbTotalIVA = new Label("Total:-");
 		
 		TextField txtfReceitaDiaria = new TextField();
 		TextField txtfDespesaFatura = new TextField();
@@ -86,12 +102,11 @@ public class MainWindowView extends Application{
 		});
 
 		btnRegist.setOnAction(e -> {
-			RecordController controller = new RecordController();
 			double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
 			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
 			double despesa = Double.parseDouble(txtfDespesa.getText());
 			double IVA = Double.parseDouble(txtfIVA.getText());
-			boolean result = controller.createNewRecord(receitaDiaria, despesaFatura, despesa, IVA, false);
+			boolean result = monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
 			Alert alert = null;
 
 			if(result){
@@ -155,4 +170,11 @@ public class MainWindowView extends Application{
 		
 	}
 
+	@Override
+	public void update() {
+		this.lbTotalReceitaDiaria.setText("Total: ");
+		this.lbTotalDespesaFatura.setText("Total: ");
+		this.lbTotalDespesa.setText("Total: ");
+		this.lbTotalIVA.setText("Total: ");
+	}
 }
