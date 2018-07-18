@@ -1,7 +1,6 @@
 package view;
 
 import controller.MonthlyRecordController;
-import controller.RecordController;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -13,7 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.MonthlyRecord;
 import model.Observer;
 import util.Setting;
 
@@ -42,7 +40,7 @@ public class MainWindowView extends Application implements Observer {
 		Setting.createRecordFile();
 		launch(args);
 	}
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
@@ -51,6 +49,7 @@ public class MainWindowView extends Application implements Observer {
 	
 	private void initUI(Stage stage) {
 		monthlyRecordController = new MonthlyRecordController();
+		this.monthlyRecordController.registerObserver(this);
 
 		root = new BorderPane();
 		gridPaneNode = new GridPane();
@@ -93,6 +92,7 @@ public class MainWindowView extends Application implements Observer {
 		TextField txtfIVA = new TextField();
 		
 		Button btnRegist = new Button("Registar");
+		Button btnSave = new Button("Guarda Registo");
 		
 		/**set action of controls**/
 		menuItemConsultarTodos.setOnAction(e -> {
@@ -106,7 +106,17 @@ public class MainWindowView extends Application implements Observer {
 			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
 			double despesa = Double.parseDouble(txtfDespesa.getText());
 			double IVA = Double.parseDouble(txtfIVA.getText());
-			boolean result = monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
+			boolean result;
+
+			if(this.monthlyRecordController.checkIfRecordExists()){
+				System.out.println("I already exist");
+				result = this.monthlyRecordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
+			}
+			else{
+				System.out.printf("I am new here");
+				result = this.monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
+			}
+
 			Alert alert = null;
 
 			if(result){
@@ -123,6 +133,16 @@ public class MainWindowView extends Application implements Observer {
 			}
 
 			alert.show();
+		});
+
+		btnSave.setOnAction(e -> {
+
+			if(this.monthlyRecordController.checkIfRecordExists()) {
+				System.out.println("Saved");
+				boolean result = this.monthlyRecordController.saveRecord();
+				//TODO: think of a better way to implement the save function
+			}
+
 		});
 		
 		/**add controls to layout manager**/
@@ -153,11 +173,14 @@ public class MainWindowView extends Application implements Observer {
 				labelTextFieldDespesaFaturaBox,
 				labelTextFieldDespesaBox,
 				labelTextFieldIVABox);
-		
-		GridPane.setHalignment(btnRegist, HPos.RIGHT);
+
+		HBox buttonBox = new HBox(10);
+		buttonBox.setAlignment((Pos.CENTER_RIGHT));
+		buttonBox.setPadding(new Insets(5));
+		buttonBox.getChildren().addAll(btnRegist, btnSave);
 		
 		gridPaneNode.add(inputBox, 0, 0);
-		gridPaneNode.add(btnRegist, 0, 4);
+		gridPaneNode.add(buttonBox, 0, 3);
 		
 		root.setTop(menuBar);
 		root.setCenter(gridPaneNode);
@@ -172,6 +195,7 @@ public class MainWindowView extends Application implements Observer {
 
 	@Override
 	public void update() {
+		System.out.println("hello i'm updated!!!");
 		this.lbTotalReceitaDiaria.setText("Total: ");
 		this.lbTotalDespesaFatura.setText("Total: ");
 		this.lbTotalDespesa.setText("Total: ");

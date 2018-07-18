@@ -1,15 +1,12 @@
 package controller;
 
 import model.Record;
-import model.Subject;
-import model.Observer;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecordController{
 	
-	private Record newRegisto;
+	private Record newRecord;
 	private DataPresistenceController dataPresistenceController;
 	
 	public RecordController() {
@@ -28,10 +25,9 @@ public class RecordController{
 	 */
 	public Record createNewRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
 		try {
-			this.newRegisto = new Record(receitaDiaria, despesaFatura, despesa, IVA, date);
-			boolean result = dataPresistenceController.writeRecordInfoToFile(this.newRegisto);
+			this.newRecord = new Record(receitaDiaria, despesaFatura, despesa, IVA, date);
 
-			return result == true ? this.newRegisto : null;
+			return this.newRecord;
 		}catch(Exception e) {
 			return null;
 		}
@@ -48,18 +44,40 @@ public class RecordController{
 	 */
 	public Record editRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
 
-		if(!this.newRegisto.getDate().isEqual(date)){
+		if(!this.newRecord.getDate().isEqual(date)){
 			return null;
 		}
 
 		try {
-			this.newRegisto.setReceitaDiariaValor(receitaDiaria);
-			this.newRegisto.setDespesaFaturaValor(despesaFatura);
-			this.newRegisto.setDespesaValor(despesa);
-			this.newRegisto.setIVAValor(IVA);
-			return this.newRegisto;
+			this.newRecord.setReceitaDiariaValor(receitaDiaria);
+			this.newRecord.setDespesaFaturaValor(despesaFatura);
+			this.newRecord.setDespesaValor(despesa);
+			this.newRecord.setIVAValor(IVA);
+			return this.newRecord;
 		} catch(Exception e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Validate if record already exists
+	 *
+	 * @param obj Record object
+	 * @return boolean
+	 */
+	public boolean validateRecord(Record obj){
+		if(this.newRecord == null){
+			return false;
+		}
+		return this.newRecord.equals(obj);
+	}
+
+	/**
+	 * Save to file record information
+	 *
+	 * @return boolean
+	 */
+	public boolean save(){
+		return dataPresistenceController.writeRecordInfoToFile(this.newRecord);
 	}
 }
