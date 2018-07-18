@@ -21,8 +21,18 @@ public class DataPresistence<T> {
 	
 	public List<String> readDataFromFile(String pathStr, String fileName) {
 		List<String> list = new ArrayList<>();
-		Path path = Paths.get(pathStr+"\\"+fileName);
 		String line = "";
+		String fullPath = "";
+
+		if(pathStr.contains("\\")){
+			fullPath = pathStr+"\\"+fileName;
+		}
+
+		if(pathStr.contains("/")){
+			fullPath = pathStr+"/"+fileName;
+		}
+
+		Path path = Paths.get(fullPath);
 
 		try(BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"))){
 
@@ -45,7 +55,17 @@ public class DataPresistence<T> {
 	 */
 	public boolean writeDataToFile(T obj, String pathStr, String fileName) {
 
-		Path path = Paths.get(pathStr+"\\"+fileName);
+		String fullPath = "";
+
+		if(pathStr.contains("\\")){
+			fullPath = pathStr+"\\"+fileName;
+		}
+
+		if(pathStr.contains("/")){
+			fullPath = pathStr+"/"+fileName;
+		}
+
+		Path path = Paths.get(fullPath);
 
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"), StandardOpenOption.APPEND)){
 			writer.write(obj.toString());

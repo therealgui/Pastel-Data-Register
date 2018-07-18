@@ -21,19 +21,26 @@ public final class Setting {
      */
     public static void setPresistenceData(){
         username = System.getProperty("user.name");
+        String operatingSystem = OSValidator.getOS();
 
-        System.out.println(System.getProperty("user.language"));
+        if(OSValidator.isWindows()) {
+            if (System.getProperty("user.language").equals("en")) {
+                mainPathStr = "C:\\Users\\" + username + "\\Documents\\Pastel-Records";
+                bakcupPathStr = "C:\\Users\\" + username + "\\Documents\\Pastel-Records-Backup";
+                fileNamePrefix = "Records";
+            }
 
-        if(System.getProperty("user.language").equals("en")){
-            mainPathStr = "C:\\Users\\"+username+"\\Documents\\Pastel-Records";
-            bakcupPathStr = "C:\\Users\\"+username+"\\Documents\\Pastel-Records-Backup";
-            fileNamePrefix = "Records";
+            if (System.getProperty("user.language").equals("pt")) {
+                mainPathStr = "C:\\Utilizadores\\" + username + "\\Documentos\\Pastel-Registos";
+                bakcupPathStr = "C:\\Utilizadores\\" + username + "\\Documents\\Pastel-Registos-Backup";
+                fileNamePrefix = "Registos";
+            }
         }
 
-        if(System.getProperty("user.language").equals("pt")){
-            mainPathStr = "C:\\Utilizadores\\"+username+"\\Documentos\\Pastel-Registos";
-            bakcupPathStr = "C:\\Utilizadores\\"+username+"\\Documents\\Pastel-Registos-Backup";
-            fileNamePrefix = "Registos";
+        if(OSValidator.isUnix()){
+            mainPathStr = "/home/" + username + "/Documents/Pastel-Records";
+            bakcupPathStr = "/home/" + username + "/Documents/Pastel-Records-Backup";
+            fileNamePrefix = "Records";
         }
 
         setFileName();
@@ -117,7 +124,17 @@ public final class Setting {
      * create record file to store info
      */
     public static void createRecordFile(){
-        Path path = Paths.get(mainPathStr+"\\"+fileName);
+        String fullPath = "";
+
+        if(OSValidator.isWindows()){
+            fullPath = mainPathStr+"\\"+fileName;
+        }
+
+        if(OSValidator.isUnix()){
+            fullPath = mainPathStr+"/"+fileName;
+        }
+
+        Path path = Paths.get(fullPath);
 
         if(!Files.exists(path)){
             try {
