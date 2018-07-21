@@ -76,6 +76,14 @@ public class MonthlyRecordController implements Subject {
     }
 
     /**
+     * get record list
+     * @return List of Record Objects
+     */
+    public List<Record> retrieveRecordList(){
+        return this.listRecords;
+    }
+
+    /**
      * get total value of this month
      *
      * @return double

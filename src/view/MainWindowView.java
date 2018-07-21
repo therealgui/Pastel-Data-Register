@@ -98,12 +98,11 @@ public class MainWindowView extends Application implements Observer {
 		/**set action of controls**/
 		menuItemConsultarTodos.setOnAction(e -> {
 			Stage newStage = new Stage();
-			new RegestryView().initUI(stage,newStage,false);
+			new RegestryView().initUI(stage,newStage, this.monthlyRecordController, false);
 			stage.hide();
 		});
 
 		btnRegist.setOnAction(e -> {
-			//TODO:add record already exists message, ask to edit last record registered?
 			double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
 			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
 			double despesa = Double.parseDouble(txtfDespesa.getText());

@@ -90,10 +90,10 @@ public class DataPresistence<T> {
 
 		List<String> list = this.readDataFromFile(pathStr, fileName);
 
-		if(list.get(list.size()-1).contains(LocalDate.now().toString())){
+		if(!list.isEmpty() && list.get(list.size()-1).contains(LocalDate.now().toString())){
 			list.remove(list.size()-1);
-			list.add(obj.toString());
 		}
+		list.add(obj.toString());
 
 		Path path = Paths.get(fullPath);
 

@@ -2,6 +2,7 @@ package view;
 
 import java.time.LocalDate;
 
+import controller.MonthlyRecordController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -10,14 +11,16 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.Record;
 
 public class RegestryView {
 	
-	public void initUI(Stage previousStage, Stage stage, boolean searchFunctionStatus) {
+	public void initUI(Stage previousStage, Stage stage, MonthlyRecordController monthlyRecordController, boolean searchFunctionStatus) {
 		StackPane root = new StackPane();
 		GridPane gridPaneNode = new GridPane();
 		gridPaneNode.setAlignment(Pos.TOP_CENTER);
@@ -27,17 +30,24 @@ public class RegestryView {
 		//gridPaneNode.setPadding(new Insets(5));
 		
 		/**create controls**/
-		TableView<String> table = new TableView<>();
+		TableView<Record> table = new TableView<>();
 		
-		TableColumn<String, String> tbColReceitaDiaria = new TableColumn<>("Receita Diária");
-		TableColumn<String, String> tbColDepesaFatura = new TableColumn<>("Despesa/Fatura");
-		TableColumn<String, String> tbColDespesa = new TableColumn<>("Despesa");
-		TableColumn<String, String> tbColIVA = new TableColumn<>("IVA");
-		TableColumn<String, String> tbColData = new TableColumn<>("Data");
+		TableColumn tbColReceitaDiaria = new TableColumn("Receita Diária");
+		tbColReceitaDiaria.setCellValueFactory(new PropertyValueFactory<>("receitaDiariaValor"));
+		TableColumn tbColDepesaFatura = new TableColumn("Despesa/Fatura");
+		tbColDepesaFatura.setCellValueFactory(new PropertyValueFactory<>("despesaFaturaValor"));
+		TableColumn tbColDespesa = new TableColumn("Despesa");
+		tbColDespesa.setCellValueFactory(new PropertyValueFactory<>("despesaValor"));
+		TableColumn tbColIVA = new TableColumn("IVA");
+		tbColIVA.setCellValueFactory(new PropertyValueFactory<>("IVAValor"));
+		TableColumn tbColData = new TableColumn("Data");
+		tbColData.setCellValueFactory(new PropertyValueFactory<>("date"));
 		
 		table.getColumns().addAll(tbColReceitaDiaria,
 				tbColDepesaFatura,tbColDespesa,tbColIVA,tbColData);
-		
+
+		table.getItems().addAll(monthlyRecordController.retrieveRecordList());
+
 		Label lbData = null;
 		final DatePicker datePicker = new DatePicker();
 		
