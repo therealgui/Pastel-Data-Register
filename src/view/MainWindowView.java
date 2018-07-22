@@ -2,7 +2,6 @@ package view;
 
 import controller.MonthlyRecordController;
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Observer;
 import util.Setting;
+
+import java.util.Optional;
 
 public class MainWindowView extends Application implements Observer {
 
@@ -102,24 +103,43 @@ public class MainWindowView extends Application implements Observer {
 		});
 
 		btnRegist.setOnAction(e -> {
+			//TODO:add record already exists message, ask to edit last record registered?
 			double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
 			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
 			double despesa = Double.parseDouble(txtfDespesa.getText());
 			double IVA = Double.parseDouble(txtfIVA.getText());
-			boolean result;
+			boolean result = false;
+			boolean newFlag = false;
+			boolean editFlag = false;
+			Alert alert = null;
 
-			if(this.monthlyRecordController.checkIfRecordExists()){
+			if(this.monthlyRecordController.doesRecordExist()){
 				System.out.println("I already exist");
-				result = this.monthlyRecordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
+
+				alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.setTitle("Aviso");
+				alert.setHeaderText("Registo já existe!");
+				alert.setContentText("Deseja modificar o registo?");
+
+				ButtonType btnYes = new ButtonType("Sim");
+				ButtonType btnNo = new ButtonType("Não");
+
+				alert.getButtonTypes().setAll(btnYes, btnNo);
+
+				Optional<ButtonType> alertResult =  alert.showAndWait();
+
+				if(alertResult.get() == btnYes){
+					editFlag = true;
+					result = this.monthlyRecordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
+				}
 			}
 			else{
 				System.out.printf("I am new here");
+				newFlag = true;
 				result = this.monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
 			}
 
-			Alert alert = null;
-
-			if(result){
+			if((result && editFlag) || (result && newFlag)){
 				alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setTitle("Confirmação");
 				alert.setHeaderText("Registo feito com sucesso");
@@ -135,15 +155,13 @@ public class MainWindowView extends Application implements Observer {
 			alert.show();
 		});
 
-		btnSave.setOnAction(e -> {
 
-			if(this.monthlyRecordController.checkIfRecordExists()) {
-				System.out.println("Saved");
-				boolean result = this.monthlyRecordController.saveRecord();
-				//TODO: think of a better way to implement the save function
-			}
-
+		stage.setOnCloseRequest(event -> {
+			System.out.println("Saved");
+			boolean result = this.monthlyRecordController.saveRecord();
+			//TODO: fix message when record already exists
 		});
+
 		
 		/**add controls to layout manager**/
 		VBox labelTextFieldReceitaDiariaBox = new VBox(10);
@@ -196,9 +214,9 @@ public class MainWindowView extends Application implements Observer {
 	@Override
 	public void update() {
 		System.out.println("hello i'm updated!!!");
-		this.lbTotalReceitaDiaria.setText("Total: ");
-		this.lbTotalDespesaFatura.setText("Total: ");
-		this.lbTotalDespesa.setText("Total: ");
-		this.lbTotalIVA.setText("Total: ");
+		this.lbTotalReceitaDiaria.setText("Total: " + this.monthlyRecordController.retreiveReceitaDiariaTotalValue());
+		this.lbTotalDespesaFatura.setText("Total: " + this.monthlyRecordController.retreiveDespesaFaturaTotalValue());
+		this.lbTotalDespesa.setText("Total: " + this.monthlyRecordController.retreiveDespesaTotalValue());
+		this.lbTotalIVA.setText("Total: " +  this.monthlyRecordController.retreiveIVATotalValue());
 	}
 }

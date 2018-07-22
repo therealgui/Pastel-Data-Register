@@ -3,6 +3,7 @@ package controller;
 import model.Record;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class RecordController{
 	
@@ -11,7 +12,7 @@ public class RecordController{
 	
 	public RecordController() {
 		dataPresistenceController = new DataPresistenceController();
-
+		this.checkForIfRecordExists();
 	}
 	
 	/**
@@ -60,6 +61,15 @@ public class RecordController{
 	}
 
 	/**
+	 * get record object
+	 *
+	 * @return Record Object
+	 */
+	public Record getNewRecord(){
+		return this.newRecord;
+	}
+
+	/**
 	 * Validate if record already exists
 	 *
 	 * @param obj Record object
@@ -72,12 +82,24 @@ public class RecordController{
 		return this.newRecord.equals(obj);
 	}
 
+	private void checkForIfRecordExists(){
+		List<Record> list = dataPresistenceController.recordsInfoByMonth(LocalDate.now().getMonthValue());
+
+		if(!list.isEmpty()) {
+			Record record = list.get(list.size() - 1);
+
+			if (record.getDate().equals(LocalDate.now())) {
+				this.newRecord = record;
+			}
+		}
+	}
+
 	/**
 	 * Save to file record information
 	 *
 	 * @return boolean
 	 */
-	public boolean save(){
-		return dataPresistenceController.writeRecordInfoToFile(this.newRecord);
+	public boolean save(boolean editFlag){
+		return dataPresistenceController.writeRecordInfoToFile(this.newRecord, editFlag);
 	}
 }

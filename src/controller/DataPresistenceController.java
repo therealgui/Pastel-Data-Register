@@ -30,7 +30,12 @@ public class DataPresistenceController {
 	 * @param obj Record object
 	 * @return boolean
 	 */
-	public boolean writeRecordInfoToFile(Record obj){
+	public boolean writeRecordInfoToFile(Record obj, boolean editFlag){
+
+		if(editFlag){
+			return dtObj.rewriteDataToFile(obj, Setting.retrieveMainPath(), Setting.retrieveFileName());
+		}
+
 		return dtObj.writeDataToFile(obj, Setting.retrieveMainPath(), Setting.retrieveFileName());
 	}
 

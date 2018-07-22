@@ -13,12 +13,14 @@ public class MonthlyRecordController implements Subject {
     private RecordController recordController;
     private List<Observer> listObservers;
     private List<Record> listRecords;
+    private boolean editFlag;
 
     public MonthlyRecordController(){
         this.dataPresistenceController = new DataPresistenceController();
         this.recordController = new RecordController();
         this.listObservers = new ArrayList<>();
         this.listRecords = this.importDataFromCurrentMonth();
+        this.editFlag = false;
     }
 
     /**
@@ -34,7 +36,6 @@ public class MonthlyRecordController implements Subject {
         Record record = this.recordController.createNewRecord(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
 
         if(record != null){
-            this.listRecords = this.importDataFromCurrentMonth();
             this.notifyObservers(); //notify all Observers
             return true;
         }
@@ -55,26 +56,12 @@ public class MonthlyRecordController implements Subject {
         Record record = this.recordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
 
         if(record != null){
-            this.listRecords = this.importDataFromCurrentMonth();
             this.notifyObservers(); //notify all Observers
+            this.editFlag = true;
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Check if record already exists
-     *
-     * @return boolean
-     */
-    public boolean checkIfRecordExists(){
-
-        if(this.listRecords.isEmpty()){
-            return false;
-        }
-
-        return this.recordController.validateRecord(this.listRecords.get(this.listRecords.size()-1));
     }
 
     /**
@@ -87,12 +74,122 @@ public class MonthlyRecordController implements Subject {
     }
 
     /**
+     * get total value of this month
+     *
+     * @return double
+     */
+    public double retreiveReceitaDiariaTotalValue(){
+        if(this.listRecords.isEmpty()){
+            return 0.0;
+        }
+
+        double sum = 0.0;
+
+        for(Record rec : this.listRecords){
+            sum += rec.getReceitaDiariaValor();
+        }
+
+        return sum;
+    }
+
+    /**
+     * get total value of this month
+     *
+     * @return double
+     */
+    public double retreiveDespesaFaturaTotalValue(){
+        if(this.listRecords.isEmpty()){
+            return 0.0;
+        }
+
+        double sum = 0.0;
+
+        for(Record rec : this.listRecords){
+            sum += rec.getDespesaFaturaValor();
+        }
+
+        return sum;
+    }
+
+    /**
+     * get total value of this month
+     *
+     * @return double
+     */
+    public double retreiveDespesaTotalValue(){
+        if(this.listRecords.isEmpty()){
+            return 0.0;
+        }
+
+        double sum = 0.0;
+
+        for(Record rec : this.listRecords){
+            sum += rec.getDespesaValor();
+        }
+
+        return sum;
+    }
+
+    /**
+     * get total value of this month
+     *
+     * @return double
+     */
+    public double retreiveIVATotalValue(){
+        if(this.listRecords.isEmpty()){
+            return 0.0;
+        }
+
+        double sum = 0.0;
+
+        for(Record rec : this.listRecords){
+            sum += rec.getIVAValor();
+        }
+
+        return sum;
+    }
+
+    /**
+     * Check if record already exists
+     *
+     * @return boolean
+     */
+    public boolean doesRecordExist(){
+
+        if(this.listRecords.isEmpty()){
+            return false;
+        }
+
+        Record lastRecord = this.listRecords.get(this.listRecords.size()-1);
+
+        return lastRecord.getDate().isEqual(LocalDate.now());
+    }
+
+
+    /**
+     * Check if record
+     */
+
+    /**
      * Save changes
      *
      * @return boolean
      */
     public boolean saveRecord(){
-        return this.recordController.save();
+        Record newRecord = this.recordController.getNewRecord();
+
+        if(newRecord == null){
+            return false;
+        }
+
+        if(this.editFlag){
+            this.listRecords.set(this.listRecords.size()-1, newRecord);
+            return this.recordController.save(editFlag);
+        }
+
+        this.listRecords.add(newRecord);
+
+        return this.recordController.save(false);
     }
 
     @Override

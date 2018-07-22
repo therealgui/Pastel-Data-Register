@@ -76,6 +76,39 @@ public class DataPresistence<T> {
 		}
 		return true;
 	}
+
+	public boolean rewriteDataToFile(T obj, String pathStr, String fileName) {
+		String fullPath = "";
+
+		if(pathStr.contains("\\")){
+			fullPath = pathStr+"\\"+fileName;
+		}
+
+		if(pathStr.contains("/")){
+			fullPath = pathStr+"/"+fileName;
+		}
+
+		List<String> list = this.readDataFromFile(pathStr, fileName);
+
+		if(list.get(list.size()-1).contains(LocalDate.now().toString())){
+			list.remove(list.size()-1);
+			list.add(obj.toString());
+		}
+
+		Path path = Paths.get(fullPath);
+
+		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"))){
+
+			for(String str : list) {
+				writer.write(str);
+				writer.newLine();
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 	public boolean makeBackup() {
 		return true;
