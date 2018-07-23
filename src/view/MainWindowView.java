@@ -208,6 +208,8 @@ public class MainWindowView extends Application implements Observer {
 		stage.setTitle("Pastel Registo Diário");
 		stage.setScene(scene);
 		stage.show();
+
+		this.monthlyRecordController.notifyObservers();
 		
 	}
 

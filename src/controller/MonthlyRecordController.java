@@ -36,6 +36,7 @@ public class MonthlyRecordController implements Subject {
         Record record = this.recordController.createNewRecord(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
 
         if(record != null){
+            this.listRecords.add(record);
             this.notifyObservers(); //notify all Observers
             return true;
         }
@@ -56,8 +57,9 @@ public class MonthlyRecordController implements Subject {
         Record record = this.recordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA, LocalDate.now());
 
         if(record != null){
-            this.notifyObservers(); //notify all Observers
+            this.listRecords.set(this.listRecords.size()-1, record);
             this.editFlag = true;
+            this.notifyObservers(); //notify all Observers
             return true;
         }
 
@@ -183,11 +185,8 @@ public class MonthlyRecordController implements Subject {
         }
 
         if(this.editFlag){
-            this.listRecords.set(this.listRecords.size()-1, newRecord);
             return this.recordController.save(editFlag);
         }
-
-        this.listRecords.add(newRecord);
 
         return this.recordController.save(false);
     }
