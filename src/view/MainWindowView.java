@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Observer;
+import util.NumbericValidator;
 import util.Setting;
 
 import java.util.Optional;
@@ -103,62 +104,86 @@ public class MainWindowView extends Application implements Observer {
 		});
 
 		btnRegist.setOnAction(e -> {
-			double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
-			double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
-			double despesa = Double.parseDouble(txtfDespesa.getText());
-			double IVA = Double.parseDouble(txtfIVA.getText());
-			boolean result = false;
-			boolean newFlag = false;
-			boolean editFlag = false;
-			Alert alert = null;
 
-			if(this.monthlyRecordController.doesRecordExist()){
-				System.out.println("I already exist");
-
-				alert = new Alert(Alert.AlertType.CONFIRMATION);
+			if(txtfReceitaDiaria.getText().isEmpty() || txtfDespesaFatura.getText().isEmpty() ||
+					txtfDespesa.getText().isEmpty() || txtfIVA.getText().isEmpty()){
+				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Aviso");
-				alert.setHeaderText("Registo já existe!");
-				alert.setContentText("Deseja modificar o registo?");
+				alert.setHeaderText("Um ou mais dos Campos encontram-se vazios");
+				alert.show();
+			}
+			else if(NumbericValidator.isNumeric(txtfReceitaDiaria.getText()) && NumbericValidator.isNumeric(txtfDespesaFatura.getText())
+					&& NumbericValidator.isNumeric(txtfDespesa.getText()) && NumbericValidator.isNumeric(txtfIVA.getText())){
 
-				ButtonType btnYes = new ButtonType("Sim");
-				ButtonType btnNo = new ButtonType("Não");
+				double receitaDiaria = Double.parseDouble(txtfReceitaDiaria.getText());
+				double despesaFatura = Double.parseDouble(txtfDespesaFatura.getText());
+				double despesa = Double.parseDouble(txtfDespesa.getText());
+				double IVA = Double.parseDouble(txtfIVA.getText());
+				boolean result = false;
+				boolean newFlag = false;
+				boolean editFlag = false;
+				Alert alert = null;
 
-				alert.getButtonTypes().setAll(btnYes, btnNo);
+				if(!this.monthlyRecordController.doesRecordExist()){
+					System.out.printf("I am new here");
+					newFlag = true;
+					result = this.monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
+				}
+				else{
+					System.out.println("I already exist");
 
-				Optional<ButtonType> alertResult =  alert.showAndWait();
+					alert = new Alert(Alert.AlertType.CONFIRMATION);
+					alert.setTitle("Aviso");
+					alert.setHeaderText("Registo já existe!");
+					alert.setContentText("Deseja modificar o registo?");
 
-				if(alertResult.get() == btnYes){
-					editFlag = true;
-					result = this.monthlyRecordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
+					ButtonType btnYes = new ButtonType("Sim");
+					ButtonType btnNo = new ButtonType("Não");
+
+					alert.getButtonTypes().setAll(btnYes, btnNo);
+
+					Optional<ButtonType> alertResult =  alert.showAndWait();
+
+					if(alertResult.get() == btnYes){
+						editFlag = true;
+						result = this.monthlyRecordController.editRecord(receitaDiaria, despesaFatura, despesa, IVA);
+					}
+					if(alertResult.get() == btnNo){
+						editFlag = false;
+						System.out.println("no");
+					}
+				}
+
+				if((result && editFlag) || (result && newFlag)){
+					alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setTitle("Confirmação");
+					alert.setHeaderText("Registo feito com sucesso");
+					alert.setContentText(null);
+					alert.show();
+				}
+				else if((!result && editFlag) || (!result && newFlag)){
+					alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Erro");
+					alert.setHeaderText("Erro ao efetura o registo de dados");
+					alert.setContentText(null);
+					alert.show();
 				}
 			}
 			else{
-				System.out.printf("I am new here");
-				newFlag = true;
-				result = this.monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Aviso");
+				alert.setHeaderText("Um ou mais dos Campos contêm caracteres não numéricos");
+				alert.show();
 			}
-
-			if((result && editFlag) || (result && newFlag)){
-				alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Confirmação");
-				alert.setHeaderText("Registo feito com sucesso");
-				alert.setContentText(null);
-			}
-			else{
-				alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Erro");
-				alert.setHeaderText("Erro ao efetura o registo de dados");
-				alert.setContentText(null);
-			}
-
-			alert.show();
 		});
 
 
 		stage.setOnCloseRequest(event -> {
-			System.out.println("Saved");
-			boolean result = this.monthlyRecordController.saveRecord();
-			//TODO: fix message when record already exists
+			if(!txtfReceitaDiaria.getText().isEmpty() && !txtfDespesaFatura.getText().isEmpty() &&
+					!txtfDespesa.getText().isEmpty() && !txtfIVA.getText().isEmpty()) {
+				System.out.println("Saved");
+				boolean result = this.monthlyRecordController.saveRecord();
+			}
 		});
 
 		
