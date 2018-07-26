@@ -179,11 +179,9 @@ public class MainWindowView extends Application implements Observer {
 
 
 		stage.setOnCloseRequest(event -> {
-			if(!txtfReceitaDiaria.getText().isEmpty() && !txtfDespesaFatura.getText().isEmpty() &&
-					!txtfDespesa.getText().isEmpty() && !txtfIVA.getText().isEmpty()) {
-				System.out.println("Saved");
-				boolean result = this.monthlyRecordController.saveRecord();
-			}
+			boolean result = this.monthlyRecordController.saveRecord();
+
+			System.out.println(result ? "Sucess Saved" : "Not Saved Error maybe?");
 		});
 
 		

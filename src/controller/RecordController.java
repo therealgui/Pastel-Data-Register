@@ -1,6 +1,7 @@
 package controller;
 
 import model.Record;
+import util.RecordState;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +13,6 @@ public class RecordController{
 	
 	public RecordController() {
 		dataPresistenceController = new DataPresistenceController();
-		this.checkForIfRecordExists();
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class RecordController{
 	public Record createNewRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
 		try {
 			this.newRecord = new Record(receitaDiaria, despesaFatura, despesa, IVA, date);
-
+			this.newRecord.setState(RecordState.NEW);
 			return this.newRecord;
 		}catch(Exception e) {
 			return null;
@@ -45,6 +45,12 @@ public class RecordController{
 	 */
 	public Record editRecord(double receitaDiaria, double despesaFatura, double despesa, double IVA, LocalDate date) {
 
+		this.newRecord = this.checkForIfRecordExists();
+
+		if(this.newRecord == null){
+			return null;
+		}
+
 		if(!this.newRecord.getDate().isEqual(date)){
 			return null;
 		}
@@ -54,6 +60,7 @@ public class RecordController{
 			this.newRecord.setDespesaFaturaValor(despesaFatura);
 			this.newRecord.setDespesaValor(despesa);
 			this.newRecord.setIVAValor(IVA);
+			this.newRecord.setState(RecordState.EDITED);
 			return this.newRecord;
 		} catch(Exception e) {
 			return null;
@@ -82,16 +89,18 @@ public class RecordController{
 		return this.newRecord.equals(obj);
 	}
 
-	private void checkForIfRecordExists(){
+	private Record checkForIfRecordExists(){
 		List<Record> list = dataPresistenceController.recordsInfoByMonth(LocalDate.now().getMonthValue());
 
 		if(!list.isEmpty()) {
 			Record record = list.get(list.size() - 1);
 
 			if (record.getDate().equals(LocalDate.now())) {
-				this.newRecord = record;
+				return record;
 			}
 		}
+
+		return null;
 	}
 
 	/**

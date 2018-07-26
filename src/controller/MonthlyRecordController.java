@@ -3,6 +3,7 @@ package controller;
 import model.Observer;
 import model.Record;
 import model.Subject;
+import util.RecordState;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -175,11 +176,6 @@ public class MonthlyRecordController implements Subject {
         return lastRecord.getDate().isEqual(LocalDate.now());
     }
 
-
-    /**
-     * Check if record
-     */
-
     /**
      * Save changes
      *
@@ -192,11 +188,15 @@ public class MonthlyRecordController implements Subject {
             return false;
         }
 
-        if(this.editFlag){
-            return this.recordController.save(editFlag);
+        if(newRecord.getState() == RecordState.NEW){
+            return this.recordController.save(false);
         }
 
-        return this.recordController.save(false);
+        if(newRecord.getState() == RecordState.EDITED){
+            return this.recordController.save(true);
+        }
+
+        return false;
     }
 
     @Override

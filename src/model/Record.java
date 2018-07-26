@@ -1,5 +1,7 @@
 package model;
 
+import util.RecordState;
+
 import java.time.*;
 
 public class Record implements Comparable<Record>{
@@ -9,6 +11,7 @@ public class Record implements Comparable<Record>{
 	private double despesaValor;
 	private double IVAValor;
 	private LocalDate date;
+	private RecordState state;
 	
 	public Record(double receitaDiariaValor, double despesaFaturaValor, double despesaValor, double IVAValor, LocalDate date) {
 		this.setReceitaDiariaValor(receitaDiariaValor);
@@ -16,6 +19,7 @@ public class Record implements Comparable<Record>{
 		this.setDespesaValor(despesaValor);
 		this.setIVAValor(IVAValor);
 		this.setDate(date);
+		this.state = RecordState.EMPTY;
 	}
 	
 	/**
@@ -88,6 +92,19 @@ public class Record implements Comparable<Record>{
 		this.date = date;
 	}
 
+	/**
+	 * @param state Record state
+	 */
+	public void setState(RecordState state){
+		this.state = state;
+	}
+
+	/**
+	 * @return record state
+	 */
+	public RecordState getState(){
+		return this.state;
+	}
 	@Override
 	public boolean equals(Object o) {
 		
