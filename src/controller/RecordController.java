@@ -109,6 +109,6 @@ public class RecordController{
 	 * @return boolean
 	 */
 	public boolean save(boolean editFlag){
-		return dataPresistenceController.writeRecordInfoToFile(this.newRecord, editFlag);
+		return dataPresistenceController.saveRecord(this.newRecord, editFlag);
 	}
 }

@@ -14,14 +14,12 @@ public class MonthlyRecordController implements Subject {
     private RecordController recordController;
     private List<Observer> listObservers;
     private List<Record> listRecords;
-    private boolean editFlag;
 
     public MonthlyRecordController(){
         this.dataPresistenceController = new DataPresistenceController();
         this.recordController = new RecordController();
         this.listObservers = new ArrayList<>();
         this.listRecords = this.importDataFromCurrentMonth();
-        this.editFlag = false;
     }
 
     /**
@@ -59,7 +57,6 @@ public class MonthlyRecordController implements Subject {
 
         if(record != null){
             this.listRecords.set(this.listRecords.size()-1, record);
-            this.editFlag = true;
             this.notifyObservers(); //notify all Observers
             return true;
         }

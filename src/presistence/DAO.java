@@ -1,14 +1,16 @@
 package presistence;
 
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface DAO<T> {
 
-    T find(int id);
-    T find(LocalDate date);
+    T findById(int id);
+    List<T> findByMonth(int month);
+    T findByDate(LocalDate date);
     List<T> findAll();
-    boolean save(T obj);
+    boolean insert(T obj);
     boolean delete(T obj);
     boolean update(T obj);
 }

@@ -1,40 +1,43 @@
 package controller;
 
 import model.Record;
-import presistence.DataPresistence;
-import util.Setting;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
+import presistence.DAO;
+import presistence.DAOManager;
 import java.util.List;
 
 public class DataPresistenceController {
-	private DataPresistence<Record> dtObj;
+	private DAOManager daoManager;
 
 	public DataPresistenceController(){
-		dtObj = new DataPresistence<>();
+		daoManager = DAOManager.getInstance();
 	}
 
 	/**
-	 * read file with all the records info
-	 * @return list of strings
+	 * Get all records from database
+	 * @return list of record objects
 	 */
-	public List<String> readRecordsInfoFromFile(){
-	    return dtObj.readDataFromFile(Setting.retrieveMainPath(), Setting.retrieveFileName());
+	public List<Record> allRecords(){
+	    return daoManager.getDAO("record").findAll();
     }
 
 	/**
-	 * write to file
+	 * Save record info into database
 	 * @param obj Record object
 	 * @return boolean
 	 */
-	public boolean writeRecordInfoToFile(Record obj, boolean editFlag){
+	public boolean saveRecord(Record obj, boolean editFlag){
+
+		DAO daoRecord = daoManager.getDAO("record");
+		DAO daoMonthly = daoManager.getDAO("monthly");
 
 		if(editFlag){
-			return dtObj.rewriteDataToFile(obj, Setting.retrieveMainPath(), Setting.retrieveFileName());
+			return daoRecord.update(obj);
 		}
 
-		return dtObj.writeDataToFile(obj, Setting.retrieveMainPath(), Setting.retrieveFileName());
+		boolean resultRecord = daoRecord.insert(obj);
+		boolean resultMonthly = daoMonthly.insert(obj);
+
+		return resultRecord && resultMonthly;
 	}
 
 	/**
@@ -43,18 +46,8 @@ public class DataPresistenceController {
 	 * @return List of Record Objects
 	 */
 	public List<Record> recordsInfoByMonth(int month){
-		List<String> list = this.readRecordsInfoFromFile();
-		List<Record> listRecords = new ArrayList<>();
+		DAO dao = daoManager.getDAO("monthly");
 
-		for(String str : list){
-			String[] split = str.split(";");
-			LocalDate date = LocalDate.parse(split[0]);
-
-			if(date.getMonth().getValue() == month){
-				listRecords.add(new Record(Double.parseDouble(split[1]),Double.parseDouble(split[2]),Double.parseDouble(split[3]),Double.parseDouble(split[4]), date));
-			}
-		}
-
-		return listRecords;
+		return dao.findByMonth(month);
 	}
 }
