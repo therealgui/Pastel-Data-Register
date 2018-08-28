@@ -23,42 +23,70 @@ public class DAOManager {
      * Get instance of Connection
      * @return Connection Object
      */
-    private Connection getConnection(){
-        if(conn == null){
-            conn = createConnection();
-        }
-
-        return conn;
+    public Connection getConnection(){
+        return this.conn;
     }
 
     /**
      * Create a Connection Object
      * @return Connection Object
      */
-    private Connection createConnection(){
+    public boolean createConnection(String dbDriver, String url, String user, String password){
+        boolean result = false;
+
         try {
-            Class.forName ("org.h2.Driver");
-            conn = DriverManager.getConnection("jdbc:h2:~/test", "test", "test");
-        } catch (Exception e) {
+            Class.forName (dbDriver);
+            conn = DriverManager.getConnection(url,user,password);
+
+            result =  conn.isValid(0);
+        } catch (SQLException e) {
             e.printStackTrace();
+        } catch(NullPointerException e) {
+            e.printStackTrace();
+        } finally {
+            return result;
         }
 
-        return conn;
     }
 
     /**
      * Close connection
      */
-    public void closeConnection(){
+    public boolean closeConnection(){
+        boolean result = false;
+
+        if(this.conn == null){
+            return result;
+        }
+
         try {
             this.conn.close();
+
+            result =  this.conn.isClosed();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            return result;
         }
     }
 
+    /**
+     * Get a implementation of the DAO interface
+     * @param name name of class
+     * @return instance of a implementation of the DAO interface
+     */
     public DAO getDAO(String name){
-        this.conn = this.getConnection();
+        if(this.conn == null){
+            return null;
+        }
+
+        try {
+            if(this.conn.isClosed()){
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if(name.equalsIgnoreCase("record")){
             return new RecordDAO(conn);

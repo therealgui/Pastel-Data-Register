@@ -1,16 +1,11 @@
 package presistence;
 
-import jdk.vm.ci.meta.Local;
-import model.MonthlyRecord;
 import model.Record;
-
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
