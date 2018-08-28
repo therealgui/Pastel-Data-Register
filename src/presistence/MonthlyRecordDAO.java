@@ -1,6 +1,8 @@
 package presistence;
 
 import model.Record;
+import util.RecordState;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,8 +34,10 @@ public class MonthlyRecordDAO implements DAO<Record> {
             double expense = result.getDouble("expense");
             double tax = result.getDouble("tax");
             LocalDate date = result.getDate("entry_date").toLocalDate();
+            Record newRecord = new Record(dailyRevenue, billExpense, expense, tax, date);
+            newRecord.setState(RecordState.PERSISTED);
 
-            return new Record(dailyRevenue, billExpense, expense, tax, date);
+            return newRecord;
 
         } catch(SQLException ex){
             ex.printStackTrace();
@@ -154,12 +158,12 @@ public class MonthlyRecordDAO implements DAO<Record> {
     }
 
     @Override
-    public boolean delete(Record obj) {
+    public boolean delete(Record obj, int id) {
         return false;
     }
 
     @Override
-    public boolean update(Record obj) {
+    public boolean update(Record obj, int id) {
         return false;
     }
 }

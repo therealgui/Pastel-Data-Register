@@ -4,12 +4,23 @@ import model.Record;
 import presistence.DAO;
 import presistence.DAOManager;
 import java.util.List;
+import java.util.Properties;
+import util.PropertiesLoader;
 
 public class DataPresistenceController {
 	private DAOManager daoManager;
+	private String propFile;
 
 	public DataPresistenceController(){
 		daoManager = DAOManager.getInstance();
+		propFile = "db_info_testing.properties";
+		Properties prop = PropertiesLoader.getProperties(propFile);
+		String db_driver = prop.getProperty("db_driver");
+		String url = prop.getProperty("url");
+		String user = prop.getProperty("user");
+		String password = prop.getProperty("password");
+
+		daoManager.createConnection(db_driver, url, user, password);
 	}
 
 	/**
@@ -31,13 +42,15 @@ public class DataPresistenceController {
 		DAO daoMonthly = daoManager.getDAO("monthly");
 
 		if(editFlag){
-			return daoRecord.update(obj);
+			return daoRecord.update(obj,0);
 		}
 
 		boolean resultRecord = daoRecord.insert(obj);
 		boolean resultMonthly = daoMonthly.insert(obj);
 
-		return resultRecord && resultMonthly;
+		boolean resultCloseConnection = daoManager.closeConnection();
+
+		return resultRecord && resultMonthly && resultCloseConnection;
 	}
 
 	/**

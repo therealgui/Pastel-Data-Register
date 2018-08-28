@@ -11,8 +11,8 @@ public class RecordController{
 	private Record newRecord;
 	private DataPresistenceController dataPresistenceController;
 	
-	public RecordController() {
-		dataPresistenceController = new DataPresistenceController();
+	public RecordController(DataPresistenceController dataPresistenceController) {
+		this.dataPresistenceController = dataPresistenceController;
 	}
 	
 	/**

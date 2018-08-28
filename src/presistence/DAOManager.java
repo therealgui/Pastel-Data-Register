@@ -1,9 +1,12 @@
 package presistence;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DAOManager {
 
+    private static final Logger LOGGER = Logger.getLogger(DAOManager.class.getName());
     private Connection conn;
     private static DAOManager instance;
 
@@ -40,9 +43,9 @@ public class DAOManager {
 
             result =  conn.isValid(0);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } catch(NullPointerException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } finally {
             return result;
         }
@@ -64,7 +67,7 @@ public class DAOManager {
 
             result =  this.conn.isClosed();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } finally {
             return result;
         }
@@ -85,7 +88,7 @@ public class DAOManager {
                 return null;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
 
         if(name.equalsIgnoreCase("record")){

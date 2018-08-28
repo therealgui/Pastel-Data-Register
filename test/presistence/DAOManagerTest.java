@@ -26,6 +26,8 @@ class DAOManagerTest {
         boolean result = daoManager.createConnection(driver, url, user, password);
 
         assertTrue(result);
+
+        daoManager.closeConnection();
     }
 
     @Test
@@ -62,6 +64,8 @@ class DAOManagerTest {
         boolean result = daoManager.createConnection(driver, url, user, password);
 
         assertFalse(result);
+
+        daoManager.closeConnection();
     }
 
     @Test
@@ -111,6 +115,8 @@ class DAOManagerTest {
         assertTrue(dao != null);
 
         assertTrue(dao instanceof RecordDAO);
+
+        daoManager.closeConnection();
     }
 
     @Test
@@ -129,6 +135,8 @@ class DAOManagerTest {
         assertTrue(dao != null);
 
         assertTrue(dao instanceof MonthlyRecordDAO);
+
+        daoManager.closeConnection();
     }
 
     @Test

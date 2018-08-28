@@ -11,6 +11,6 @@ public interface DAO<T> {
     T findByDate(LocalDate date);
     List<T> findAll();
     boolean insert(T obj);
-    boolean delete(T obj);
-    boolean update(T obj);
+    boolean delete(T obj, int id);
+    boolean update(T obj, int id);
 }

@@ -17,6 +17,8 @@ import util.NumbericValidator;
 import util.Setting;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainWindowView extends Application implements Observer {
 
@@ -35,12 +37,13 @@ public class MainWindowView extends Application implements Observer {
 	Label lbTotalDespesa;
 	Label lbTotalIVA;
 	MonthlyRecordController monthlyRecordController;
+	private static final Logger LOGGER = Logger.getLogger(MainWindowView.class.getName());
 
 	public static void main(String[] args) {
-		Setting.setPresistenceData();
+		/*Setting.setPresistenceData();
 		Setting.createMainDirectory();
 		Setting.createBackupDirectory();
-		Setting.createRecordFile();
+		Setting.createRecordFile();*/
 		launch(args);
 	}
 
@@ -95,7 +98,6 @@ public class MainWindowView extends Application implements Observer {
 		TextField txtfIVA = new TextField();
 		
 		Button btnRegist = new Button("Registar");
-		Button btnSave = new Button("Guarda Registo");
 		
 		/**set action of controls**/
 		menuItemConsultarTodos.setOnAction(e -> {
@@ -126,12 +128,12 @@ public class MainWindowView extends Application implements Observer {
 				Alert alert = null;
 
 				if(!this.monthlyRecordController.doesRecordExist()){
-					System.out.printf("I am new here");
+					LOGGER.log(Level.INFO, "New Record added");
 					newFlag = true;
 					result = this.monthlyRecordController.addNewRecord(receitaDiaria, despesaFatura, despesa, IVA);
 				}
 				else{
-					System.out.println("I already exist");
+					LOGGER.log(Level.WARNING, "Record already exists");
 
 					alert = new Alert(Alert.AlertType.CONFIRMATION);
 					alert.setTitle("Aviso");
@@ -182,7 +184,12 @@ public class MainWindowView extends Application implements Observer {
 		stage.setOnCloseRequest(event -> {
 			boolean result = this.monthlyRecordController.saveRecord();
 
-			System.out.println(result ? "Sucess Saved" : "Not Saved Error maybe?");
+			if(result){
+				LOGGER.log(Level.INFO, "Record saved");
+			}
+			else {
+				LOGGER.log(Level.WARNING, "Not Saved Error maybe?");
+			}
 		});
 
 		
@@ -218,7 +225,7 @@ public class MainWindowView extends Application implements Observer {
 		HBox buttonBox = new HBox(10);
 		buttonBox.setAlignment((Pos.CENTER_RIGHT));
 		buttonBox.setPadding(new Insets(5));
-		buttonBox.getChildren().addAll(btnRegist, btnSave);
+		buttonBox.getChildren().addAll(btnRegist);
 		
 		gridPaneNode.add(inputBox, 0, 0);
 		gridPaneNode.add(buttonBox, 0, 3);
@@ -238,7 +245,7 @@ public class MainWindowView extends Application implements Observer {
 
 	@Override
 	public void update() {
-		System.out.println("hello i'm updated!!!");
+		LOGGER.log(Level.INFO, "Display of Total values updated");
 		this.lbTotalReceitaDiaria.setText("Total: " + this.monthlyRecordController.retreiveReceitaDiariaTotalValue());
 		this.lbTotalDespesaFatura.setText("Total: " + this.monthlyRecordController.retreiveDespesaFaturaTotalValue());
 		this.lbTotalDespesa.setText("Total: " + this.monthlyRecordController.retreiveDespesaTotalValue());
