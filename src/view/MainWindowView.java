@@ -12,9 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Observer;
-import presistence.DAOManager;
 import util.NumbericValidator;
-import util.Setting;
 
 import java.util.Optional;
 import java.util.logging.Level;
