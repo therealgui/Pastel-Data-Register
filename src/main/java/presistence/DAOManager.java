@@ -40,7 +40,7 @@ public class DAOManager {
         try {
             Class.forName (dbDriver);
             conn = DriverManager.getConnection(url,user,password);
-
+            System.out.printf("CONNECTED");
             result =  conn.isValid(0);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);

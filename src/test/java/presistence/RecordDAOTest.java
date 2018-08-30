@@ -11,7 +11,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Properties;
-import java.util.PropertyPermission;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +28,7 @@ class RecordDAOTest {
     void setUp() {
         daoManager = DAOManager.getInstance();
         propFile = "db_info_testing.properties";
-        Properties prop = PropertiesLoader.getProperties(propFile);
+        Properties prop = PropertiesLoader.loadProperties(propFile);
         db_driver = prop.getProperty("db_driver");
         url = prop.getProperty("url");
         user = prop.getProperty("user");

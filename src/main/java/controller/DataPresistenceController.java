@@ -14,7 +14,7 @@ public class DataPresistenceController {
 	public DataPresistenceController(){
 		daoManager = DAOManager.getInstance();
 		propFile = "db_info_testing.properties";
-		Properties prop = PropertiesLoader.getProperties(propFile);
+		Properties prop = PropertiesLoader.loadProperties(propFile);
 		String db_driver = prop.getProperty("db_driver");
 		String url = prop.getProperty("url");
 		String user = prop.getProperty("user");
@@ -60,7 +60,7 @@ public class DataPresistenceController {
 	 */
 	public List<Record> recordsInfoByMonth(int month){
 		DAO dao = daoManager.getDAO("monthly");
-
+		
 		return dao.findByMonth(month);
 	}
 }
