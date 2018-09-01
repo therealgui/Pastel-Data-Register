@@ -101,4 +101,32 @@ public class DAOManager {
         return null;
     }
 
+    public boolean backupDatabase(){
+        Statement stmt = null;
+        boolean result = false;
+
+        try{
+            stmt = this.conn.createStatement();
+
+            int res = stmt.executeUpdate("BACKUP TO 'myFile.zip'");
+
+            if(res > 0) {
+                result = true;
+            }
+
+            return result;
+
+        } catch(SQLException ex){
+            LOGGER.log(Level.SEVERE, ex.toString(), ex);
+        } finally{
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+    }
+
 }

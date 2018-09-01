@@ -60,7 +60,11 @@ public class DataPresistenceController {
 	 */
 	public List<Record> recordsInfoByMonth(int month){
 		DAO dao = daoManager.getDAO("monthly");
-		
+
 		return dao.findByMonth(month);
 	}
+
+	public boolean backup(){
+	    return this.daoManager.backupDatabase();
+    }
 }

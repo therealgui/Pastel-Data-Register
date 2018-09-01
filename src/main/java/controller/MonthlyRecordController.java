@@ -15,8 +15,8 @@ public class MonthlyRecordController implements Subject {
     private List<Observer> listObservers;
     private List<Record> listRecords;
 
-    public MonthlyRecordController(){
-        this.dataPresistenceController = new DataPresistenceController();
+    public MonthlyRecordController(DataPresistenceController dataPresistenceController){
+        this.dataPresistenceController = dataPresistenceController;
         this.recordController = new RecordController(dataPresistenceController);
         this.listObservers = new ArrayList<>();
         this.listRecords = this.importDataFromCurrentMonth();

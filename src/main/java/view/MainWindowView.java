@@ -1,5 +1,6 @@
 package view;
 
+import controller.DataPresistenceController;
 import controller.MonthlyRecordController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -35,6 +36,7 @@ public class MainWindowView extends Application implements Observer {
 	Label lbTotalDespesa;
 	Label lbTotalIVA;
 	MonthlyRecordController monthlyRecordController;
+	DataPresistenceController dataPresistenceController;
 	private static final Logger LOGGER = Logger.getLogger(MainWindowView.class.getName());
 
 	public static void main(String[] args) {
@@ -52,7 +54,8 @@ public class MainWindowView extends Application implements Observer {
 	}
 	
 	private void initUI(Stage stage) {
-		monthlyRecordController = new MonthlyRecordController();
+		dataPresistenceController = new DataPresistenceController();
+		monthlyRecordController = new MonthlyRecordController(dataPresistenceController);
 		this.monthlyRecordController.registerObserver(this);
 
 		root = new BorderPane();
@@ -187,6 +190,15 @@ public class MainWindowView extends Application implements Observer {
 			}
 			else {
 				LOGGER.log(Level.WARNING, "Not Saved Error maybe?");
+			}
+
+			result = this.dataPresistenceController.backup();
+
+			if(result){
+				LOGGER.log(Level.INFO, "DB backed up");
+			}
+			else {
+				LOGGER.log(Level.WARNING, "Not backed up Error maybe?");
 			}
 		});
 
